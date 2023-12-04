@@ -1,0 +1,71 @@
+/*==============================================================*/
+/* DBMS name:      MySQL 5.0                                    */
+/* Created on:     04/12/2023 14:19:24                          */
+/* Created by:     Febillia                                     */
+/*==============================================================*/
+
+drop table if exists MAHASISWA;
+drop table if exists MAHASISWA_MATKUL;
+drop table if exists MATA_KULIAH;
+drop table if exists PRODI;
+
+/*==============================================================*/
+/* Table: MAHASISWA                                             */
+/*==============================================================*/
+create table MAHASISWA
+(
+   NIM                  char(10) not null,
+   KODE_PRODI           char(8) not null,
+   NAMA                 varchar(30) not null,
+   TTL                  date not null,
+   JK                   char(1) not null,
+   ALAMAT               varchar(30) not null,
+   primary key (NIM)
+);
+
+/*==============================================================*/
+/* Table: MAHASISWA_MATKUL                                      */
+/*==============================================================*/
+create table MAHASISWA_MATKUL
+(
+   NIM                  char(10) not null,
+   KODE_MK              char(8) not null,
+   primary key (NIM, KODE_MK)
+);
+
+/*==============================================================*/
+/* Table: MATA_KULIAH                                           */
+/*==============================================================*/
+create table MATA_KULIAH
+(
+   KODE_MK              char(8) not null,
+   KODE_PRODI           char(8) not null,
+   NAMA                 varchar(30) not null,
+   SKS                  varchar(5) not null,
+   SEMESTER             int not null,
+   primary key (KODE_MK)
+);
+
+/*==============================================================*/
+/* Table: PRODI                                                 */
+/*==============================================================*/
+create table PRODI
+(
+   KODE_PRODI           char(8) not null,
+   NAMA                 varchar(30) not null,
+   STRATA               char(2) not null,
+   AKREDITAS            char(1) not null,
+   primary key (KODE_PRODI)
+);
+
+alter table MAHASISWA add constraint FK_MAHASISWA_PRODI foreign key (KODE_PRODI)
+      references PRODI (KODE_PRODI) on delete restrict on update restrict;
+
+alter table MAHASISWA_MATKUL add constraint FK_DIAMBIL_OLEH foreign key (NIM)
+      references MAHASISWA (NIM) on delete restrict on update restrict;
+
+alter table MAHASISWA_MATKUL add constraint FK_MENGAMBIL foreign key (KODE_MK)
+      references MATA_KULIAH (KODE_MK) on delete restrict on update restrict;
+
+alter table MATA_KULIAH add constraint FK_PRODI_MATKUL foreign key (KODE_PRODI)
+      references PRODI (KODE_PRODI) on delete restrict on update restrict;
